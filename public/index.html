@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Public Transport Route Optimizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Public Transport Route Optimizer</h1>
+    <form id="routeForm">
+      <label for="start">Start City:</label>
+      <select id="start" required>
+        <option value="">Select city</option>
+        <option value="Kigali">Kigali</option>
+        <option value="Huye">Huye</option>
+        <option value="Gitarama">Gitarama</option>
+      </select>
+      <label for="end">End City:</label>
+      <select id="end" required>
+        <option value="">Select city</option>
+        <option value="Kigali">Kigali</option>
+        <option value="Huye">Huye</option>
+        <option value="Gitarama">Gitarama</option>
+      </select>
+      <button type="submit">Get Route</button>
+    </form>
+    <div id="result"></div>
+    <div id="error" class="error"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
