@@ -1,123 +1,121 @@
-# Public Transport Route Optimizer
+Rwanda Public Transport Route Optimizer
+A web application that helps users find and compare the best routes between major Rwandan cities. It supports car, bicycle, and walking modes, shows distance, duration, and cost estimates, and lets users sort results by any of those metrics.
+Live (via load balancer): http://[LB01_IP]
 
-A Node.js web application that helps users find the optimal public transport route between Rwandan cities using the OpenRouteService API.
+Features
 
-## Purpose
-This app allows users to select a start and end city (Kigali, Huye, Gitarama) and get the distance, estimated travel duration, and a cost estimate for the route. It demonstrates practical use of an external API and provides a real-world utility for route planning.
+Route calculation between 12 Rwandan cities
+Three transport modes: Car, Bicycle, Walking
+Side-by-side comparison of all three modes
+Sort results by distance, duration, or cost
+Estimated transport cost in RWF (Rwandan Francs)
+Responsive design — works on mobile and desktop
+Graceful error handling for API timeouts, rate limits, and invalid routes
 
----
 
-## Features
-- User-friendly web interface (HTML/CSS/JS)
-- Uses OpenRouteService API for real route data
-- Calculates distance, duration, and cost
-- Robust error handling and user feedback
-- Secure API key management with `.env`
-- Ready for deployment on two servers with HAProxy load balancing
+APIs Used
+APIPurposeDocumentationOpenRouteServiceRoute calculation (distance, duration, directions)https://openrouteservice.org/dev/#/api-docs
+OpenRouteService is free up to 2,000 requests/day. No credit card required.
 
----
+Local Setup
+Prerequisites
 
-## How to Run Locally
-1. **Clone the repository:**
-   ```
-   git clone https://github.com/yourusername/public-transport-route-optimizer.git
-   cd public-transport-route-optimizer
-   ```
-2. **Install dependencies:**
-   ```
-   npm install
-   ```
-3. **Set your API key:**
-   - Get a free API key from [OpenRouteService](https://openrouteservice.org/sign-up/)
-   - Create a `.env` file in the project root:
-     ```
-     API_KEY=your_real_openrouteservice_api_key_here
-     ```
-4. **Start the server:**
-   ```
-   node server.js
-   ```
-5. **Open your browser:**
-   - Go to [http://localhost:3000](http://localhost:3000)
+Node.js v18 or later
+npm
+A free OpenRouteService API key (sign up at https://openrouteservice.org/dev/#/signup)
 
----
+Steps
+ # 1. Clone the repository
+git clone https://github.com/YOUR_USERNAME/Web-infrastructure_summative_Eden.git
 
-## Deployment Instructions
-### Deploy on Web01 and Web02
-1. **Copy all project files to both servers.**
-2. **On each server:**
-   - Install Node.js and npm if not already installed.
-   - Run `npm install`.
-   - Add your `.env` file with the API key (do NOT share this file).
-   - Start the app: `node server.js` (or use pm2 for production).
-   - Ensure the app is running on port 3000.
 
-### HAProxy Load Balancer Example
-On your load balancer server (Lb01), use this config:
-```
-frontend http_front
-    bind *:80
-    default_backend http_back
+# 2. Install dependencies
+npm install
 
-backend http_back
-    balance roundrobin
-    server web01 54.147.35.15:3000 check
-    server web02 44.204.91.237:3000 check
-```
-- Restart HAProxy after editing the config.
-- Access your app via the load balancer's public IP.
+# 3. Create your environment file
+cp .env.example .env
+# Edit .env and i add my API key:
+#   API_KEY=your_openrouteservice_key_here
 
----
+# 4. Start the server
+node server.js
+Open http://localhost:3000 in your browser.
 
-## API Documentation & Credit
-- **API Used:** [OpenRouteService Directions API](https://openrouteservice.org/dev/#/api-docs/v2/directions/{profile}/post)
-- **Credit:** OpenRouteService for route data
+Deployment
+The app runs on two web servers (Web01, Web02) behind an HAProxy load balancer (Lb01).
+Internet ──▶ HAProxy (Lb01:80) ──▶ Nginx (Web01:80) ──▶ Node.js (:3000)
+                              └──▶ Nginx (Web02:80) ──▶ Node.js (:3000)
+Deploy to Web01 and Web02 (repeat on both)
+# 1. SSH in
+ssh ubuntu@WEB0X_IP
 
----
+# 2. Install Node.js and Nginx
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs nginx
 
-## Security
-- API keys are stored in `.env` and never committed to GitHub.
-- `.gitignore` ensures sensitive files are not tracked.
+# 3. Copy app files
+sudo mkdir -p /var/www/route-optimizer
+sudo chown ubuntu:ubuntu /var/www/route-optimizer
+git clone https://github.com/YOUR_USERNAME/Web-infrastructure_summative_Eden.git /var/www/route-optimizer
+cd /var/www/route-optimizer
+npm install --production
 
----
+# 4. Create .env with your API key
+echo "API_KEY=my_key_here" > .env
+echo "PORT=3000"             >> .env
 
-## User Interaction
-- Users select start and end cities from dropdowns.
-- Click "Get Route" to fetch and display distance, duration, and cost.
-- Errors (e.g., invalid input, API issues) are shown clearly.
+# 5. Install systemd service (keeps app running after reboot)
+sudo cp deployment/route-optimizer.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable route-optimizer
+sudo systemctl start  route-optimizer
+sudo systemctl status route-optimizer   # should show "active (running)"
 
----
+# 6. Configure Nginx reverse proxy
+sudo cp deployment/nginx.conf /etc/nginx/sites-available/route-optimizer
+sudo ln -s /etc/nginx/sites-available/route-optimizer /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t                          # must say "syntax is ok"
+sudo systemctl reload nginx
 
-## Error Handling
-- Invalid input (e.g., same city) is caught on both frontend and backend.
-- API/network errors are shown to the user with friendly messages.
+# 7. Verify
+curl http://WEB0X_IP/health
+# Expected: {"status":"ok","service":"route-optimizer"}
+Configure Load Balancer (Lb01)
+bash# 1. SSH into Lb01
+ssh ubuntu@LB01_IP
 
----
+# 2. Install HAProxy
+sudo apt-get update && sudo apt-get install -y haproxy
 
-## Demo Video
-- [Add your demo video link here]
+# 3. Edit haproxy.cfg — replace WEB01_IP and WEB02_IP with real private IPs
+nano deployment/haproxy.cfg
 
----
+# 4. Deploy
+sudo cp deployment/haproxy.cfg /etc/haproxy/haproxy.cfg
+sudo haproxy -c -f /etc/haproxy/haproxy.cfg   # validate
+sudo systemctl enable haproxy
+sudo systemctl restart haproxy
 
-## Challenges
-- Handling API errors and user input validation.
-- Ensuring secure API key management.
+# 5. Test load balancing — watch logs on BOTH servers while running this
+curl http://LB01_IP/health   # run several times
+# HAProxy stats: http://LB01_IP:8404/haproxy?stats
+To confirm round-robin is working, tail the Node.js logs on each server:
+bashsudo journalctl -fu route-optimizer   # on Web01 and Web02 simultaneously
+Requests from http://LB01_IP should alternate between the two servers.
 
----
+Environment Variables
+VariableDescriptionAPI_KEYYour OpenRouteService API keyPORTPort for the Node.js server (default: 3000)
+Never commit your .env file — it is listed in .gitignore.
 
-## Attribution
-- [OpenRouteService](https://openrouteservice.org/)
-- [Express.js](https://expressjs.com/)
-- [Axios](https://axios-http.com/)
-- [dotenv](https://github.com/motdotla/dotenv)
+Challenges & Solutions
+Coordinate order mismatch — OpenRouteService expects [longitude, latitude] but most geographic libraries use [latitude, longitude]. This caused routes to appear in the wrong location. Fixed by explicitly ordering coordinates as [lon, lat] before sending to the API.
+Comparing transport modes — The assignment required sorting and filtering data. Implemented by fetching all three transport profiles in parallel (Promise.allSettled) and storing results client-side, so sorting never requires another API call.
+Load balancer health checks — HAProxy needs a /health endpoint that returns a known string to confirm a backend is alive. Added a dedicated GET /health route to the Express server returning {"status":"ok"}.
 
----
+Credits
 
-## Comments
-- Paste your API key in `.env` on each server.
-- Do NOT share your API key publicly.
-- For any issues, check the API key and server logs.
-
----
-
-**This project is for educational purposes.**
+Routing API: OpenRouteService by HeiGIT (Heidelberg Institute for Geoinformation Technology) — free tier, ODbL license
+Framework: Express.js — MIT License
+HTTP client: Axios — MIT License
+Map data: © OpenStreetMap contributors

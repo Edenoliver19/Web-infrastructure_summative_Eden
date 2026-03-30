@@ -1,34 +1,572 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Public Transport Route Optimizer</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rwanda Route Optimizer</title>
+
+  <!-- Syne (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Tokens ───────────────────────────────────────────────────────── */
+    :root {
+      --green-900: #0f3320;
+      --green-800: #1a5c38;
+      --green-700: #226b43;
+      --green-200: #c8e6d4;
+      --green-100: #e8f5ed;
+      --green-50:  #f3faf6;
+
+      --sand:   #f7f3ec;
+      --sand-2: #ede8df;
+
+      --text-1: #111a14;
+      --text-2: #3d5445;
+      --text-3: #7a9485;
+
+      --border: #d5e5da;
+      --border-strong: #b2ccba;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+
+      --shadow-sm: 0 1px 3px rgba(15,51,32,.07), 0 1px 2px rgba(15,51,32,.05);
+      --shadow-md: 0 4px 16px rgba(15,51,32,.10), 0 2px 4px rgba(15,51,32,.07);
+    }
+
+    /* ── Reset ────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      background: var(--sand);
+      color: var(--text-1);
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Layout ───────────────────────────────────────────────────────── */
+    .page {
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* ── Header ───────────────────────────────────────────────────────── */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .header-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green-800);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .header-icon svg { width: 22px; height: 22px; color: #fff; }
+
+    .header-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green-900);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-3);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* ── Card ─────────────────────────────────────────────────────────── */
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    /* ── Field ────────────────────────────────────────────────────────── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 6px;
+    }
+
+    .select-wrap { position: relative; }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-3);
+      pointer-events: none;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-1);
+      background: var(--green-50);
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+
+    select:focus {
+      border-color: var(--green-700);
+      box-shadow: 0 0 0 3px rgba(34,107,67,.12);
+    }
+
+    /* ── Mode selector ────────────────────────────────────────────────── */
+    .mode-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .mode-opt { position: relative; }
+    .mode-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+    .mode-opt span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--green-50);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      user-select: none;
+    }
+
+    .mode-opt span svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+    }
+
+    .mode-opt input:checked + span {
+      background: var(--green-800);
+      border-color: var(--green-800);
+      color: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mode-opt span:hover { border-color: var(--green-700); }
+    .mode-opt input:checked + span:hover { background: var(--green-700); }
+
+    .mode-opt input:focus-visible + span {
+      outline: 2px solid var(--green-700);
+      outline-offset: 2px;
+    }
+
+    /* ── Submit button ────────────────────────────────────────────────── */
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--green-800);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-submit svg { width: 18px; height: 18px; }
+    .btn-submit:hover { background: var(--green-700); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { background: var(--text-3); cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* ── Error ────────────────────────────────────────────────────────── */
+    .error-box {
+      background: #fff5f5;
+      border: 1px solid #fca5a5;
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      color: #991b1b;
+      font-size: 13px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .error-box.visible { display: block; }
+
+    /* ── Results section ──────────────────────────────────────────────── */
+    .results-section { display: none; }
+    .results-section.visible { display: block; }
+
+    /* Sort bar */
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .sort-lbl {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .sort-pills { display: flex; gap: 6px; }
+
+    .sort-btn {
+      padding: 4px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 20px;
+      background: transparent;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .sort-btn:hover { border-color: var(--green-700); color: var(--green-700); }
+
+    .sort-btn.active {
+      background: var(--green-800);
+      border-color: var(--green-800);
+      color: #fff;
+    }
+
+    /* Table */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead tr { background: var(--green-100); }
+
+    th {
+      padding: 9px 14px;
+      text-align: left;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    td {
+      padding: 11px 14px;
+      border-top: 1px solid var(--border);
+      color: var(--text-1);
+    }
+
+    tbody tr:hover td { background: var(--green-50); }
+
+    tbody tr.best td {
+      background: var(--green-100);
+      font-weight: 500;
+    }
+
+    tbody tr.best td:first-child { position: relative; }
+
+    tbody tr.best td:first-child::before {
+      content: '★';
+      font-size: 10px;
+      color: var(--green-700);
+      margin-right: 5px;
+    }
+
+    /* Best route card */
+    .best-card {
+      background: var(--green-900);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      color: #fff;
+    }
+
+    .best-card-eyebrow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-200);
+      margin-bottom: 6px;
+    }
+
+    .best-card-route {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .best-card-route svg { width: 16px; height: 16px; color: var(--green-200); flex-shrink: 0; }
+
+    .best-card-stats {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .best-stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 12px;
+      border-right: 1px solid rgba(255,255,255,.12);
+    }
+
+    .best-stat:first-child { padding-left: 0; }
+    .best-stat:last-child  { border-right: none; padding-right: 0; }
+
+    .best-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .best-unit { font-size: 11px; color: var(--green-200); margin-top: 3px; }
+
+    .best-card-mode {
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--green-200);
+      border-top: 1px solid rgba(255,255,255,.1);
+      padding-top: 10px;
+    }
+
+    /* ── Footer attribution ───────────────────────────────────────────── */
+    .attribution {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 24px;
+    }
+
+    .attribution a { color: var(--text-3); text-decoration: none; }
+    .attribution a:hover { color: var(--green-700); text-decoration: underline; }
+
+    /* ── Responsive ───────────────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      body { padding: 20px 12px 48px; }
+      .card { padding: 18px; }
+      .best-num { font-size: 22px; }
+      .mode-row { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: 0.01ms !important; }
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Public Transport Route Optimizer</h1>
-    <form id="routeForm">
-      <label for="start">Start City:</label>
-      <select id="start" required>
-        <option value="">Select city</option>
-        <option value="Kigali">Kigali</option>
-        <option value="Huye">Huye</option>
-        <option value="Gitarama">Gitarama</option>
-      </select>
-      <label for="end">End City:</label>
-      <select id="end" required>
-        <option value="">Select city</option>
-        <option value="Kigali">Kigali</option>
-        <option value="Huye">Huye</option>
-        <option value="Gitarama">Gitarama</option>
-      </select>
-      <button type="submit">Get Route</button>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/>
+        <circle cx="12" cy="9" r="2.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <div>
+      <div class="header-title">Rwanda Route Optimizer</div>
+      <div class="header-sub">Find the best route between cities</div>
+    </div>
+  </header>
+
+  <!-- Form card -->
+  <div class="card">
+    <form id="routeForm" novalidate>
+
+      <div class="field">
+        <label class="field-label" for="start">Starting city</label>
+        <div class="select-wrap">
+          <select id="start" required aria-label="Select starting city">
+            <option value="">Choose a city…</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="end">Destination</label>
+        <div class="select-wrap">
+          <select id="end" required aria-label="Select destination city">
+            <option value="">Choose a city…</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label" id="mode-label">Transport mode</span>
+        <div class="mode-row" role="group" aria-labelledby="mode-label">
+
+          <label class="mode-opt">
+            <input type="radio" name="profile" value="driving-car" checked />
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 11l2-6h14l2 6"/><rect x="2" y="11" width="20" height="8" rx="2"/>
+                <circle cx="6.5" cy="19" r="1.5"/><circle cx="17.5" cy="19" r="1.5"/>
+              </svg>
+              Car
+            </span>
+          </label>
+
+          <label class="mode-opt">
+            <input type="radio" name="profile" value="cycling-regular" />
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/>
+                <path d="M6 15l4-8h4l3 8M10 7h4"/>
+              </svg>
+              Bicycle
+            </span>
+          </label>
+
+          <label class="mode-opt">
+            <input type="radio" name="profile" value="foot-walking" />
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="4" r="1.5"/>
+                <path d="M9 9l3-3 3 3-1.5 5.5-3 2.5-3-2.5L9 9Z"/>
+              </svg>
+              Walking
+            </span>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="field">
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 10h12M10 4l6 6-6 6"/>
+          </svg>
+          Find Routes
+        </button>
+      </div>
+
     </form>
-    <div id="result"></div>
-    <div id="error" class="error"></div>
+
+    <!-- Error -->
+    <div id="error" class="error-box" role="alert" aria-live="polite"></div>
   </div>
-  <script src="script.js"></script>
+
+  <!-- Results -->
+  <div id="result" class="results-section" aria-live="polite">
+
+    <!-- Sort bar -->
+    <div class="sort-bar">
+      <span class="sort-lbl">Sort by</span>
+      <div class="sort-pills" role="group" aria-label="Sort results">
+        <button class="sort-btn active" data-sort="distance">Distance</button>
+        <button class="sort-btn" data-sort="duration">Duration</button>
+        <button class="sort-btn" data-sort="cost">Cost</button>
+      </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="table-wrap">
+      <table role="grid" aria-label="Route comparison">
+        <thead>
+          <tr>
+            <th scope="col">Mode</th>
+            <th scope="col">Distance</th>
+            <th scope="col">Duration</th>
+            <th scope="col">Est. Cost</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Best route card -->
+    <div id="resultCard" class="best-card" aria-label="Best route summary"></div>
+
+  </div>
+
+  <!-- Attribution -->
+  <p class="attribution">
+    Routing by <a href="https://openrouteservice.org/" target="_blank" rel="noopener">OpenRouteService</a>
+    &nbsp;·&nbsp;
+    Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>
+  </p>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
