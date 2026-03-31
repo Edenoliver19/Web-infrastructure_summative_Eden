@@ -10,6 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <style>
     /* ── Tokens ───────────────────────────────────────────────────────── */
     :root {
@@ -250,6 +254,18 @@
     /* ── Results section ──────────────────────────────────────────────── */
     .results-section { display: none; }
     .results-section.visible { display: block; }
+
+    /* Map */
+    .map-wrap {
+      width: 100%;
+      height: 320px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      background: var(--green-50);
+      z-index: 1; /* Keep map layer controls beneath sticky elements if any */
+      overflow: hidden;
+    }
 
     /* Sort bar */
     .sort-bar {
@@ -527,6 +543,9 @@
   <!-- Results -->
   <div id="result" class="results-section" aria-live="polite">
 
+    <!-- Map Container -->
+    <div id="map" class="map-wrap" aria-label="Route map"></div>
+
     <!-- Sort bar -->
     <div class="sort-bar">
       <span class="sort-lbl">Sort by</span>
@@ -559,7 +578,7 @@
 
   <!-- Attribution -->
   <p class="attribution">
-    Routing by <a href="https://openrouteservice.org/" target="_blank" rel="noopener">OpenRouteService</a>
+    Routing by <a href="https://www.graphhopper.com/" target="_blank" rel="noopener">GraphHopper</a>
     &nbsp;·&nbsp;
     Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>
   </p>

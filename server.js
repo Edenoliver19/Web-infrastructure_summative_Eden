@@ -65,27 +65,31 @@ app.post('/route', async (req, res) => {
       return res.status(400).json({ error: 'Invalid transport mode.' });
     }
  
-    const startCoords = [cities[start].lon, cities[start].lat];
-    const endCoords   = [cities[end].lon,   cities[end].lat];
- 
-    // ── Call OpenRouteService ────────────────────────────────────────────
-    const response = await axios.post(
-      `https://api.openrouteservice.org/v2/directions/${profile}`,
-      { coordinates: [startCoords, endCoords] },
-      {
-        headers: {
-          Authorization: API_KEY,
-          'Content-Type': 'application/json',
-        },
-        timeout: 10000, // 10 s timeout
-      }
-    );
- 
-    const route    = response.data.features[0];
-    const distance = route.properties.summary.distance / 1000;       // km
-    const duration = route.properties.summary.duration / 60;          // minutes
+    const startCoords = `${cities[start].lon},${cities[start].lat}`;
+    const endCoords   = `${cities[end].lon},${cities[end].lat}`;
+
+    // ── Call GraphHopper API ─────────────────────────────────────────────
+    // Map profiles to GraphHopper vehicle types
+    const profileMap = {
+      'driving-car': 'car',
+      'cycling-regular': 'bike',
+      'foot-walking': 'foot',
+    };
+    const vehicle = profileMap[profile] || 'car';
+
+    const url = `https://graphhopper.com/api/1/route?point=${cities[start].lat},${cities[start].lon}&point=${cities[end].lat},${cities[end].lon}&vehicle=${vehicle}&locale=en&calc_points=true&points_encoded=false&key=${API_KEY}`;
+
+    const response = await axios.get(url, { timeout: 10000 });
+
+    if (!response.data.paths || response.data.paths.length === 0) {
+      return res.status(404).json({ error: 'No route found between these cities.' });
+    }
+
+    const path = response.data.paths[0];
+    const distance = path.distance / 1000; // meters to km
+    const duration = path.time / 60000;    // ms to minutes
     const cost     = Math.round(distance * VALID_PROFILES[profile].costPerKm);
- 
+
     res.json({
       distance: distance.toFixed(2),
       duration: duration.toFixed(1),
@@ -93,6 +97,7 @@ app.post('/route', async (req, res) => {
       profile: VALID_PROFILES[profile].label,
       start,
       end,
+      points: path.points,
     });
  
   } catch (err) {
