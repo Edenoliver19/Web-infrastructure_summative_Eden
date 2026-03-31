@@ -1,7 +1,7 @@
 {
   "name": "rwanda-route-optimizer",
   "version": "1.0.0",
-  "description": "A web application that finds and compares the best routes between Rwandan cities using the OpenRouteService API.",
+  "description": "A web application that finds and compares the best routes between Rwandan cities using the GraphHopper API.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,7 @@
     "rwanda",
     "route",
     "optimizer",
-    "openrouteservice"
+    "graphhopper"
   ],
   "author": "Eden Oliver",
   "license": "MIT",
