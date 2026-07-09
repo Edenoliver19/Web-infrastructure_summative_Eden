@@ -82,7 +82,9 @@ function bindEvents() {
   els.authForm.addEventListener('submit', handleAuthSubmit);
   els.bookingForm.addEventListener('submit', handleBookingSubmit);
   els.vehicleType.addEventListener('change', () => populateProviderSelect());
-  els.logoutBtn.addEventListener('click', logout);
+  if (els.logoutBtn) {
+    els.logoutBtn.addEventListener('click', logout);
+  }
 }
 
 async function loadCatalog() {
@@ -179,7 +181,9 @@ function renderSessionState() {
   }
 
   if (!state.user) {
-    els.logoutBtn.classList.add('hidden');
+    if (els.logoutBtn) {
+      els.logoutBtn.classList.add('hidden');
+    }
     els.sessionChip.classList.add('hidden');
     els.bookingState.textContent = 'Guest';
     els.bookingState.className = 'status-pill dark';
@@ -189,7 +193,9 @@ function renderSessionState() {
     return;
   }
 
-  els.logoutBtn.classList.remove('hidden');
+  if (els.logoutBtn) {
+    els.logoutBtn.classList.remove('hidden');
+  }
   els.sessionChip.classList.remove('hidden');
   els.sessionChip.textContent = `${state.user.name} · ${state.user.role === 'driver' ? 'Service provider' : 'Client'}`;
   els.bookingState.textContent = state.user.role === 'driver' ? 'Provider' : 'Client';
@@ -246,12 +252,6 @@ function renderCustomers() {
   const bookingCounts = state.dashboard.bookings.reduce((counts, booking) => {
     counts[booking.customerId] = (counts[booking.customerId] || 0) + 1;
     return counts;
-  }, {});
-  const latestBookingByCustomer = state.dashboard.bookings.reduce((latest, booking) => {
-    if (!latest[booking.customerId]) {
-      latest[booking.customerId] = booking;
-    }
-    return latest;
   }, {});
   const latestBookingByCustomer = state.dashboard.bookings.reduce((latest, booking) => {
     if (!latest[booking.customerId]) {
