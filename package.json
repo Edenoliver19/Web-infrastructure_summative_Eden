@@ -1,7 +1,7 @@
 {
   "name": "rwanda-route-optimizer",
   "version": "1.0.0",
-  "description": "A web application that finds and compares the best routes between Rwandan cities using the GraphHopper API.",
+  "description": "A Rwanda ticket booking platform for customers and drivers with traffic-aware routing, live GPS updates, and online payment-ready flows.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,9 +9,10 @@
   },
   "keywords": [
     "rwanda",
-    "route",
-    "optimizer",
-    "graphhopper"
+    "tickets",
+    "booking",
+    "drivers",
+    "traffic"
   ],
   "author": "Eden Oliver",
   "license": "MIT",

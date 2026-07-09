@@ -1,0 +1,455 @@
+{
+  "users": [
+    {
+      "id": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "name": "MIGISHA Olivier",
+      "email": "migisholivier@gmail.com",
+      "phone": "+250781061652",
+      "role": "customer",
+      "passwordSalt": "f9ccc40ac7ab13fded055b1b9e06a969",
+      "passwordHash": "53eb04795a41e660ce003397ee509d96718e5bcd41e406faae87f22dd132f27d196c93be647d96cd059758fec5c703eba13688a37ce9a88d1607b7cf5bcae263",
+      "createdAt": "2026-06-25T21:04:50.069Z"
+    },
+    {
+      "id": "c1230999-c47f-48a6-91ab-3186293b32de",
+      "name": "Walu",
+      "email": "muhimbadevis@gmail.com",
+      "phone": "0791697558",
+      "role": "customer",
+      "passwordSalt": "416991505c1c41f03c4cd0de809eb301",
+      "passwordHash": "70e754af8507657858b740ec953d644e84b3f1d36a7fd77374ad67a9f9cc00031892b9bc60421e4804766f560c4ebfa98dd5c8c1dbe22da04e30ee9a4a273ed0",
+      "createdAt": "2026-06-28T21:24:58.942Z"
+    }
+  ],
+  "sessions": [
+    {
+      "token": "618a6d0c-de40-4c11-b85e-9a90e1f27cd0",
+      "userId": "12071914-e0f2-4af0-a09c-a0f32622c40d",
+      "createdAt": "2026-06-25T21:18:28.701Z"
+    },
+    {
+      "token": "f372478d-2d70-441c-a03f-abe7d4d34dbe",
+      "userId": "c1230999-c47f-48a6-91ab-3186293b32de",
+      "createdAt": "2026-06-28T21:24:58.942Z"
+    },
+    {
+      "token": "c4a8f9a7-8cf2-43d7-ac50-a42862c6cb73",
+      "userId": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "createdAt": "2026-07-06T20:04:01.178Z"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "8dfe3de8-614d-493b-bc27-c67e8e653a37",
+      "customerId": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "customerName": "MIGISHA Olivier",
+      "customerEmail": "migisholivier@gmail.com",
+      "contactPhone": "+250781061652",
+      "pickup": "Eastern Province",
+      "dropoff": "Southern Province",
+      "pickupNote": "Gate",
+      "dropoffNote": "Bus stop",
+      "passengerCount": 4,
+      "vehicleType": "bus",
+      "paymentMethod": "mobile-money",
+      "paymentStatus": "online-ready",
+      "status": "pending",
+      "driverId": null,
+      "driverName": null,
+      "serviceProviderId": null,
+      "serviceProviderName": null,
+      "serviceProviderVehicleType": "bus",
+      "createdAt": "2026-07-06T20:07:38.495Z",
+      "updatedAt": "2026-07-06T20:07:38.495Z",
+      "pickupPoint": {
+        "name": "Eastern Province",
+        "lat": -1.9487,
+        "lon": 30.4347,
+        "source": "catalog"
+      },
+      "dropoffPoint": {
+        "name": "Southern Province",
+        "lat": -2.3523,
+        "lon": 29.7507,
+        "source": "catalog"
+      },
+      "liveTraffic": {
+        "label": "Light",
+        "multiplier": 1.13,
+        "notes": [
+          "Long inter-district trip",
+          "Bus traffic sensitivity"
+        ],
+        "updatedAt": "2026-07-06T20:07:38.493Z"
+      },
+      "route": {
+        "origin": {
+          "name": "Eastern Province",
+          "lat": -1.9487,
+          "lon": 30.4347,
+          "source": "catalog"
+        },
+        "destination": {
+          "name": "Southern Province",
+          "lat": -2.3523,
+          "lon": 29.7507,
+          "source": "catalog"
+        },
+        "distanceKm": 116.51,
+        "baseDurationMin": 199.7,
+        "adjustedDurationMin": 214.4,
+        "points": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              30.4347,
+              -1.9487
+            ],
+            [
+              29.7507,
+              -2.3523
+            ]
+          ]
+        },
+        "fare": 16929,
+        "traffic": {
+          "label": "Light",
+          "multiplier": 1.13,
+          "notes": [
+            "Long inter-district trip",
+            "Bus traffic sensitivity"
+          ],
+          "updatedAt": "2026-07-06T20:07:38.493Z"
+        },
+        "vehicleType": "bus"
+      },
+      "paymentReference": "PAY-7EED7E32",
+      "rejections": [],
+      "liveDriverLocation": null
+    },
+    {
+      "id": "b59d3b34-87d4-4641-b6fb-6c7975d513f6",
+      "customerId": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "customerName": "MIGISHA Olivier",
+      "customerEmail": "migisholivier@gmail.com",
+      "contactPhone": "2507965590617",
+      "pickup": "Remera",
+      "dropoff": "Nyabugogo",
+      "pickupNote": "Home gate",
+      "dropoffNote": "Gate",
+      "passengerCount": 2,
+      "vehicleType": "mini-bus",
+      "paymentMethod": "mobile-money",
+      "paymentStatus": "online-ready",
+      "status": "assigned",
+      "driverId": "driver-demo-2",
+      "driverName": "Jean Claude Niyonsenga",
+      "serviceProviderId": "driver-demo-2",
+      "serviceProviderName": "Jean Claude Niyonsenga",
+      "serviceProviderVehicleType": "mini-bus",
+      "createdAt": "2026-07-06T20:07:12.879Z",
+      "updatedAt": "2026-07-06T20:07:12.879Z",
+      "pickupPoint": {
+        "name": "Remera",
+        "lat": -1.9508,
+        "lon": 30.1141,
+        "source": "catalog"
+      },
+      "dropoffPoint": {
+        "name": "Nyabugogo",
+        "lat": -1.9407,
+        "lon": 30.0422,
+        "source": "catalog"
+      },
+      "liveTraffic": {
+        "label": "Light",
+        "multiplier": 1.18,
+        "notes": [
+          "High-traffic Kigali corridor"
+        ],
+        "updatedAt": "2026-07-06T20:07:12.878Z"
+      },
+      "route": {
+        "origin": {
+          "name": "Remera",
+          "lat": -1.9508,
+          "lon": 30.1141,
+          "source": "catalog"
+        },
+        "destination": {
+          "name": "Nyabugogo",
+          "lat": -1.9407,
+          "lon": 30.0422,
+          "source": "catalog"
+        },
+        "distanceKm": 10.65,
+        "baseDurationMin": 18.3,
+        "adjustedDurationMin": 22.7,
+        "points": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              30.1141,
+              -1.9508
+            ],
+            [
+              30.0422,
+              -1.9407
+            ]
+          ]
+        },
+        "fare": 2601,
+        "traffic": {
+          "label": "Light",
+          "multiplier": 1.18,
+          "notes": [
+            "High-traffic Kigali corridor"
+          ],
+          "updatedAt": "2026-07-06T20:07:12.878Z"
+        },
+        "vehicleType": "mini-bus"
+      },
+      "paymentReference": "PAY-5B465A3D",
+      "rejections": [],
+      "liveDriverLocation": null
+    },
+    {
+      "id": "387798a7-dc58-4aa9-bda5-e68c3eaed308",
+      "customerId": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "customerName": "MIGISHA Olivier",
+      "customerEmail": "migisholivier@gmail.com",
+      "contactPhone": "7888888888",
+      "pickup": "Kigali City",
+      "dropoff": "Nyabihu",
+      "pickupNote": "GATE",
+      "dropoffNote": "BUS STOP",
+      "passengerCount": 1,
+      "vehicleType": "mini-bus",
+      "paymentMethod": "mobile-money",
+      "paymentStatus": "online-ready",
+      "status": "pending",
+      "driverId": null,
+      "driverName": null,
+      "serviceProviderId": null,
+      "serviceProviderName": null,
+      "serviceProviderVehicleType": "mini-bus",
+      "createdAt": "2026-07-01T22:21:38.330Z",
+      "updatedAt": "2026-07-01T22:21:38.330Z",
+      "pickupPoint": {
+        "name": "Kigali City",
+        "lat": -1.9441,
+        "lon": 30.0619,
+        "source": "catalog"
+      },
+      "dropoffPoint": {
+        "name": "Nyabihu",
+        "lat": -1.6734,
+        "lon": 29.3735,
+        "source": "catalog"
+      },
+      "liveTraffic": {
+        "label": "Moderate",
+        "multiplier": 1.26,
+        "notes": [
+          "Long inter-district trip",
+          "High-traffic Kigali corridor"
+        ],
+        "updatedAt": "2026-07-01T22:21:38.328Z"
+      },
+      "route": {
+        "origin": {
+          "name": "Kigali City",
+          "lat": -1.9441,
+          "lon": 30.0619,
+          "source": "catalog"
+        },
+        "destination": {
+          "name": "Nyabihu",
+          "lat": -1.6734,
+          "lon": 29.3735,
+          "source": "catalog"
+        },
+        "distanceKm": 108.53,
+        "baseDurationMin": 186,
+        "adjustedDurationMin": 246.1,
+        "points": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              30.0619,
+              -1.9441
+            ],
+            [
+              29.3735,
+              -1.6734
+            ]
+          ]
+        },
+        "fare": 22195,
+        "traffic": {
+          "label": "Moderate",
+          "multiplier": 1.26,
+          "notes": [
+            "Long inter-district trip",
+            "High-traffic Kigali corridor"
+          ],
+          "updatedAt": "2026-07-01T22:21:38.328Z"
+        },
+        "vehicleType": "mini-bus"
+      },
+      "paymentReference": "PAY-1848C774",
+      "rejections": [],
+      "liveDriverLocation": null
+    },
+    {
+      "id": "ca512614-1582-4e4e-a9ae-b3018633dbe4",
+      "customerId": "6edb895c-9c13-4ab3-b642-9fbc22c32b9d",
+      "customerName": "MIGISHA Olivier",
+      "customerEmail": "migisholivier@gmail.com",
+      "contactPhone": "791697558",
+      "pickup": "Kanombe",
+      "dropoff": "Remera",
+      "pickupNote": "SECTEUR",
+      "dropoffNote": "gATE",
+      "passengerCount": 4,
+      "vehicleType": "bus",
+      "paymentMethod": "mobile-money",
+      "paymentStatus": "online-ready",
+      "status": "pending",
+      "driverId": null,
+      "driverName": null,
+      "createdAt": "2026-06-25T21:06:58.640Z",
+      "updatedAt": "2026-06-25T21:25:17.694Z",
+      "pickupPoint": {
+        "name": "Kanombe",
+        "lat": -1.9698,
+        "lon": 30.1706,
+        "source": "catalog"
+      },
+      "dropoffPoint": {
+        "name": "Remera",
+        "lat": -1.9508,
+        "lon": 30.1141,
+        "source": "catalog"
+      },
+      "liveTraffic": {
+        "label": "Heavy",
+        "multiplier": 1.48,
+        "notes": [
+          "Morning commute",
+          "High-traffic Kigali corridor",
+          "Bus traffic sensitivity"
+        ],
+        "updatedAt": "2026-06-25T21:06:58.640Z"
+      },
+      "route": {
+        "origin": {
+          "name": "Kanombe",
+          "lat": -1.9698,
+          "lon": 30.1706,
+          "source": "catalog"
+        },
+        "destination": {
+          "name": "Remera",
+          "lat": -1.9508,
+          "lon": 30.1141,
+          "source": "catalog"
+        },
+        "distanceKm": 8.74,
+        "baseDurationMin": 15,
+        "adjustedDurationMin": 21.1,
+        "points": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              30.1706,
+              -1.9698
+            ],
+            [
+              30.1141,
+              -1.9508
+            ]
+          ]
+        },
+        "fare": 3032,
+        "traffic": {
+          "label": "Heavy",
+          "multiplier": 1.48,
+          "notes": [
+            "Morning commute",
+            "High-traffic Kigali corridor",
+            "Bus traffic sensitivity"
+          ],
+          "updatedAt": "2026-06-25T21:06:58.640Z"
+        },
+        "vehicleType": "bus"
+      },
+      "paymentReference": "PAY-EC6AA3FB",
+      "rejections": [
+        {
+          "driverId": "12071914-e0f2-4af0-a09c-a0f32622c40d",
+          "driverName": "Vanessa Kanyana",
+          "at": "2026-06-25T21:25:17.330Z"
+        },
+        {
+          "driverId": "12071914-e0f2-4af0-a09c-a0f32622c40d",
+          "driverName": "Vanessa Kanyana",
+          "at": "2026-06-25T21:25:17.694Z"
+        }
+      ],
+      "liveDriverLocation": null
+    }
+  ],
+  "drivers": [
+    {
+      "id": "driver-demo-1",
+      "name": "Aline Mukamugema",
+      "email": "driver1@demo.rw",
+      "phone": "+250788000001",
+      "role": "driver",
+      "vehicleType": "bus",
+      "status": "available",
+      "currentLocation": {
+        "lat": -1.9441,
+        "lon": 30.0619,
+        "label": "Kigali"
+      },
+      "passwordSalt": "demo-salt-1",
+      "passwordHash": "894c56c7e7c7eb2b27272872e35b9e46b60a8e4d57700dfe200999c462fa3e85700ae00eace9052c46967595a005bf55cde1c60b7347e640e2371f3df5836609"
+    },
+    {
+      "id": "driver-demo-2",
+      "name": "Jean Claude Niyonsenga",
+      "email": "driver2@demo.rw",
+      "phone": "+250788000002",
+      "role": "driver",
+      "vehicleType": "mini-bus",
+      "status": "reserved",
+      "currentLocation": {
+        "lat": -1.4998,
+        "lon": 29.6333,
+        "label": "Musanze"
+      },
+      "passwordSalt": "demo-salt-2",
+      "passwordHash": "e07ffcf3ab48e85e63ece450cc8d8d4d4a765b2830af848796b8b44c3dd6b27ec9310d58368794929608ea8e23c087b4df88cea01a868d73318e9367dce49e7f"
+    },
+    {
+      "id": "12071914-e0f2-4af0-a09c-a0f32622c40d",
+      "name": "Vanessa Kanyana",
+      "email": "o.migisha@alustudent.com",
+      "phone": "+250781061652",
+      "role": "driver",
+      "vehicleType": "mini-bus",
+      "status": "available",
+      "currentLocation": {
+        "lat": -1.9441,
+        "lon": 30.0619,
+        "label": "Kigali",
+        "updatedAt": "2026-06-25T21:25:23.149Z"
+      },
+      "passwordSalt": "fe2f545b67ad529bc5ff75c75cc7f89e",
+      "passwordHash": "61392be3d865b71e52bd05facf824af31a4483568cfb14db4099e84c81b750f598ecbd0f3e4c308c297255724a06377fd1087ec20affd0e956dd36acb2c065e5",
+      "createdAt": "2026-06-25T21:18:16.878Z"
+    }
+  ]
+}
